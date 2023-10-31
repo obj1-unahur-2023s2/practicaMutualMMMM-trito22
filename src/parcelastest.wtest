@@ -1,0 +1,71 @@
+import parcelas.*
+import plantas.*
+describe "Test de Parcelas"  {
+	
+	const parcela1 = new Parcela(ancho = 20, largo = 1, horasAlSol = 8)
+	const parcela2 = new Parcela(ancho = 2.5, largo = 2, horasAlSol = 8)
+	const parcela3 = new Parcela(ancho = 20, largo = 2, horasAlSol = 8)
+	const parcelaIdeal = new Parcela(ancho = 20, largo = 2, horasAlSol = 6)
+	
+	const parcelaEco = new ParcelaEcologica(ancho = 20, largo = 2, horasAlSol = 5)
+	const parcelaIndu = new ParcelaIndustrial(ancho = 20, largo = 2, horasAlSol = 6)
+	
+	const sojaPec = new Soja(anio = 2009, altura = 0.4)
+	const soja1 = new Soja(anio = 2009, altura = 1.4)
+	const soja2 = new Soja(anio = 2007, altura = 1.3)
+	const soja3 = new Soja(anio = 2009, altura = 1.2)
+	const soja4 = new Soja(anio = 2007, altura = 1.1)
+	const sojaT = new SojaTransgenica(anio = 2007, altura = 1.1)
+	
+	const quinoa1 = new Quinoa(anio = 2007, altura = 1.1, horasAlSolQueTolera = 7)
+	const quinoa2 = new Quinoa(anio = 2010, altura = 1, horasAlSolQueTolera = 12)
+	const quinoa3 = new Quinoa(anio = 2010, altura = 1, horasAlSolQueTolera = 15)
+	
+	const menta1 = new Menta(anio = 2007, altura = 1.1)
+	
+	const menta2 = new HierbaBuena(anio = 2007, altura = 1.1)
+	
+	method initialize() {
+		parcela1.plantarPlantaCon(#{soja1, soja2, soja3, soja4})
+		parcela3.plantarPlantaCon(#{soja1, soja2, soja3, soja4})
+		
+		parcelaIdeal.plantarPlantaCon(#{menta1, quinoa1, sojaPec})
+		
+		parcelaEco.plantarPlantaCon(#{menta1, quinoa1})
+		parcelaIndu.plantarPlantaCon(#{quinoa2, quinoa3})
+	}
+	
+	test "parcela superficie" {
+		assert.equals(20, parcela1.superficie())
+	}
+	
+	test "parcela tolerancia" {
+		assert.equals(4, parcela1.cantidaMaximaDePlantasQueTolera())
+	}
+	test "parcela con o sin complicaciones" {
+		assert.notThat(parcela1.tieneComplicaciones())
+		//parcela1.plantarPlanta(soja5) nos da error ya que supera su capacidad	
+	} 
+	
+	test "parcela ideal para la soja transgénica" {
+		assert.equals(1, parcela2.cantidaMaximaDePlantasQueTolera())
+		assert.that(sojaT.esIdealLaParcela(parcela2))
+	}
+	test "parcela ideal para la menta" {
+		assert.that(menta2.esIdealLaParcela(parcela3))
+		assert.that(menta1.esIdealLaParcela(parcela3))
+	}
+	test "parcela es ideal para la quinoa" {
+		assert.that(quinoa1.esIdealLaParcela(parcela3))
+	}
+	test "parcela es ideal" {
+		assert.that(parcelaIdeal.parcelaEsIdeal())
+	}
+	test "parcela no es ideal" {
+		assert.notThat(parcela3.parcelaEsIdeal())
+	}
+	test "se asocian Bien"{
+		assert.that(parcelaEco.todasSeAsociaBien())
+		assert.that(parcelaIndu.todasSeAsociaBien())
+	}
+}

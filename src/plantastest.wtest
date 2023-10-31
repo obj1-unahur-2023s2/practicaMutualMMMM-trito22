@@ -1,0 +1,72 @@
+import plantas.*
+import parcelas.*
+describe "Test de Plantas"  {
+	
+	const menta1 = new Menta(anio = 2010, altura = 1)
+	const menta2 = new Menta(anio = 2005, altura = 0.3)
+	const hierba1 = new HierbaBuena(anio = 2010, altura = 1)
+	
+	const soja1 = new Soja(anio = 2009, altura = 1)
+	const soja2 = new Soja(anio = 2007, altura = 0.6)
+	
+	const quinoa1 = new Quinoa(anio = 2010, altura = 1, horasAlSolQueTolera = 12)
+	const quinoa2 = new Quinoa(anio = 2010, altura = 1, horasAlSolQueTolera = 12)
+	const quinoa3 = new Quinoa(anio = 2010, altura = 1, horasAlSolQueTolera = 15)
+	
+	const parcelaEco = new ParcelaEcologica(ancho = 20, largo = 2, horasAlSol = 5)
+	const parcelaIndu = new ParcelaIndustrial(ancho = 20, largo = 2, horasAlSol = 6)
+	
+	method initialize() {
+		menta1.valor(3)	
+		parcelaEco.plantarPlantaCon(#{menta1, quinoa1})
+		parcelaIndu.plantarPlantaCon(#{quinoa2, quinoa3})
+		}
+		
+	test "Menta - test de ejemplo" {
+		assert.equals(3, menta1.valor())	}
+	test "Menta espacio" {
+		assert.equals(3, menta1.espacioQueOcupa())
+		assert.equals(0.9, menta2.espacioQueOcupa())
+	}
+	test "Menta semillas" {
+		assert.that(menta1.daNuevasSemillas())
+		assert.notThat(menta2.daNuevasSemillas())
+	}
+	
+	test "Soja semillas" {
+		assert.that(soja1.daNuevasSemillas())
+		assert.notThat(soja2.daNuevasSemillas())
+	}
+	test "Soja espacio" {
+		assert.equals(0.5, soja1.espacioQueOcupa())
+		assert.equals(0.3, soja2.espacioQueOcupa())
+	}
+	test "Soja Tolerancia" {
+		assert.equals(7, soja1.horasDeSolQueTolera())
+		assert.equals(7, soja2.horasDeSolQueTolera())
+	}
+	test "Quinoa semillas" {
+		assert.that(quinoa1.daNuevasSemillas())
+		assert.that(quinoa2.daNuevasSemillas())
+	}
+	test "HierbaBuena Espacio" {
+		assert.equals(9, hierba1.espacioQueOcupa())
+	}
+	test "planta se asocia bien en parcela ecologica" {
+		assert.that(parcelaEco.seAsociaBienAEcologica(quinoa1))
+		assert.that(parcelaEco.seAsociaBienAEcologica(menta1))
+	}
+	test "planta no se asocia bien en parcela ecologica" {
+		assert.notThat(parcelaEco.seAsociaBienAEcologica(soja1))
+	}
+	test "planta se asocia bien en parcela industrial" {
+		assert.that(parcelaIndu.seAsociaBienAIndustrial(quinoa2))
+		assert.that(parcelaIndu.seAsociaBienAIndustrial(quinoa3))
+	}
+	test "planta no se asocia bien en parcela industrial" {
+		assert.notThat(parcelaIndu.seAsociaBienAIndustrial(menta1))
+	}
+}
+
+
+

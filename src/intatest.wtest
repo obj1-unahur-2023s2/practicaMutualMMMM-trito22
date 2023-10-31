@@ -1,0 +1,41 @@
+import plantas.*
+import parcelas.*
+import inta.*
+
+describe "Test de INTA"  {
+	
+	const parcela1 = new ParcelaIndustrial(ancho = 20, largo = 1, horasAlSol = 8)
+	const parcela3 = new ParcelaEcologica(ancho = 20, largo = 2, horasAlSol = 8)
+	
+	const soja1 = new Soja(anio = 2009, altura = 1)
+	const soja2 = new Soja(anio = 2007, altura = 0.6)
+	const quinoa2 = new Quinoa(anio = 2010, altura = 1, horasAlSolQueTolera = 12)
+	const quinoa3 = new Quinoa(anio = 2010, altura = 1, horasAlSolQueTolera = 15)
+	
+	const parcelaIndu = new ParcelaIndustrial(ancho = 20, largo = 2, horasAlSol = 6)
+	
+	method initialize() {
+		parcela1.plantarPlantaCon(#{soja1, soja2})
+		parcela3.plantarPlantaCon(#{soja1, soja2})
+		
+		parcelaIndu.plantarPlantaCon(#{quinoa2, quinoa3})
+		
+		inta.aniadirParcelas(parcela1)
+		inta.aniadirParcelas(parcela3)
+		inta.aniadirParcelas(parcelaIndu)
+		
+		parcelaIndu.aniadorPlantasAutoSustentables()
+		parcela3.aniadorPlantasAutoSustentables()
+		parcela1.aniadorPlantasAutoSustentables()
+	}
+	
+	test "porcentaje inta" {
+		assert.equals(2, inta.promedioDePlantas())
+	}
+	test "x" {
+		assert.equals(2, parcelaIndu.plantasAutosustentables().size())
+	}
+	test "inta mas autosustentable" {
+		assert.equals(parcelaIndu, inta.masAutosustentable())
+	}
+}
